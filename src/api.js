@@ -1,35 +1,26 @@
 import { useState, useEffect } from "react";
 
-const API_KEY = `0a25f094f4f94446b1a2105e99684468`;
+const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
+const FMP_API_KEY = `e25ee6f07a20300466042dc2892848eb`;
 
-async function getHeadlines(search) {
-  const url = `https://newsapi.org/v2/top-headlines?country=au&apiKey=${API_KEY}&q=${search}`;
-  let res = await fetch(url);
+export async function getCompanies() {
+  const url = `https://financialmodelingprep.com/api/v3/nasdaq_constituent?apikey=${FMP_API_KEY}`;
+  let res = await fetch(url); // json array
+
+  console.log(`in API as res`);
+  console.log(typeof res);
+  console.log(typeof res);
+  console.log(typeof res[0]);
+  console.log(res[0].name);
+
   let data = await res.json();
 
-  return data.articles;
-}
+  console.log(`in API as data`);
+  console.log(typeof res);
+  console.log(typeof res);
+  console.log(typeof res[0]);
+  console.log(res[0].name);
+  console.log(`fetch done + ${res}`);
 
-export function useNewsArticles(search) {
-  const [loading, setLoading] = useState(true);
-  const [headlines, setHeadlines] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setHeadlines(await getHeadlines(search));
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    })();
-  }, [search]); // when SEARCH is updated the useEffect will be run again // want to rerender NOT query backend
-
-  return {
-    loading,
-    headlines,
-    error: null,
-  };
+  return res;
 }

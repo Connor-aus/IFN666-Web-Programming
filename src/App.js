@@ -21,6 +21,7 @@ function App() {
       <div className="App">
         <div>
           <nav>
+            {/*make navbar into a map function */}
             <ul>
               <li>
                 <NavLink to="/">Home</NavLink>
@@ -32,7 +33,7 @@ function App() {
                 <NavLink to="/quote">Quote</NavLink>
               </li>
               <li>
-                <NavLink to="/pricehistory">Price Hostory</NavLink>
+                <NavLink to="/pricehistory">Price History</NavLink>
               </li>
             </ul>
           </nav>
