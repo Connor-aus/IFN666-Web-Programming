@@ -1,5 +1,10 @@
 import { useState } from "react";
 
+// select stock (search with predictive)
+// search button
+// industry category selector (drop down)
+// table below should show [stock, name, industry]
+
 export function SearchBar(props) {
   const [innerSearch, setInnerSearch] = useState("");
 
