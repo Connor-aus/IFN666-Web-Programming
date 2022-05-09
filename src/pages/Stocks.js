@@ -49,8 +49,8 @@ export default function Stocks() {
   const [search, setSearch] = useState("");
   const { loading, stocks, error } = useAPI(stockURL, FMP_API_KEY);
 
-  async function getRowData() {
-    if (stocks == []) return [];
+  async function getRowData(stocks) {
+    // if (stocks == []) return []; // error checking??
 
     return stocks.map((stock) => {
       return {
@@ -63,7 +63,7 @@ export default function Stocks() {
 
   useEffect(() => {
     (async () => {
-      setRowData(await getRowData());
+      setRowData(await getRowData(stocks)); // error checking ??
     })();
   }, [stocks]);
 
@@ -72,7 +72,7 @@ export default function Stocks() {
   }
 
   if (error !== null) {
-    return (alert = `${error}`); // this may be wrong
+    return (alert = `${error}`); // this may be wrong, dont use alert
   }
 
   return (

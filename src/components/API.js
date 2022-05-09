@@ -26,11 +26,14 @@ export default function useAPI(endPoint, API_KEY, ...props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  console.log("API FUNCTION called"); ////
+
   useEffect(() => {
     (async () => {
       try {
         setStocks(await getData(endPoint, API_KEY, ...props));
         setLoading(false);
+        console.log("API called"); ////
       } catch (err) {
         setError(err);
         setLoading(false);
