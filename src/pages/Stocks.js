@@ -3,29 +3,11 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, badge, Badge } from "reactstrap";
-
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import SearchBar from "./../components/SearchBar";
 import useAPI from "../components/API";
-
-import { useNavigate, Link } from "react-router-dom";
-
-// show intro to webpage (about)
-// table with [symbol, name, industry]
-// table with industry performance ??
-
-// Health Care
-// Financials
-// Industrials
-// Real Estate
-// Consumer Discretionary
-// Materials
-// Information Technology
-// Energy
-// Consumer Staples
-// Telecommunication Services
-// Utilities
 
 // FMP API https://site.financialmodelingprep.com/developer
 // API key https://site.financialmodelingprep.com/register
@@ -50,15 +32,11 @@ const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
 const industryURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
 
 export default function Stocks() {
-  //const navigate = useNavigate();
-  //const [stockId, setStockId] = useState("BPM");
   const { loading, data, error } = useAPI(stockURL, FMP_API_KEY);
   const [gridColumnApi, setGridColumnApi] = useState();
   const [gridApi, setGridApi] = useState();
   const [rowData, setRowData] = useState([]);
-  const [searchedRowData, setSearchedRowData] = useState([]);
   const [search, setSearch] = useState("");
-  const [industry, setIndustry] = useState("");
   const [tableLoading, setTableLoading] = useState(true);
   const [chartLoading, setChartLoading] = useState(true);
 
@@ -75,19 +53,6 @@ export default function Stocks() {
       field: "name",
       cellRendererFramework: (params) => {
         let linkSymbol = symbolFinder(params);
-
-        // let linkSymbol = ``;
-        // let found = false;
-        // let rowLength = data.length;
-        // let count = 0;
-
-        // while (!found && count < rowLength) {
-        //   if (data[count].name == params.value) {
-        //     linkSymbol = data[count].symbol;
-        //     found = true;
-        //   }
-        //   count++;
-        // }
         return <Link to={`/PriceHistory/${linkSymbol}`}>{params.value}</Link>;
       },
     },
@@ -95,10 +60,15 @@ export default function Stocks() {
       headerName: "Industry",
       field: "industry",
       cellRendererFramework: (params) => (
-        <Link to={`/PriceHistory/${params.value}`}>{params.value}</Link>
+        <Link to={`/Industry/${params.value}`}>{params.value}</Link>
       ),
     },
   ];
+
+  function onGridReady(params) {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  }
 
   async function symbolFinder(params) {
     let rowLength = data.length;
@@ -110,11 +80,6 @@ export default function Stocks() {
     }
     return notFound;
   }
-
-  // const navigateToPriceHistory = (event) => {
-  //   const selectedRow = event.api.getSelectedRows()[0]["symbol"];
-  //   navigate(`../PriceHistory`, { state: { stockId: selectedRow } });
-  // };
 
   async function getRowData(stocks) {
     // if (stocks == []) return []; // error checking??
@@ -128,11 +93,6 @@ export default function Stocks() {
     });
   }
 
-  function onGridReady(params) {
-    setGridApi(params.api);
-    setGridColumnApi(params.columnApi);
-  }
-
   useEffect(() => {
     (async () => {
       try {
@@ -141,10 +101,26 @@ export default function Stocks() {
         //console.log(loading);
         setRowData(await getRowData(data)); // error checking ??
       } catch {
-        console.log(`data still being fetched`);
+        console.log(`Stock data still being fetched` + error);
       }
     })();
   }, [data]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       if (industryData == []) {
+  //         console.log("calling industry API");
+  //         {
+  //         }
+  //         setIndustryData(await useAPI(industryURL, AA_API_KEY));
+  //       }
+  //       setRowData(await getRowData(data)); // error checking ??
+  //     } catch {
+  //       console.log(`data still being fetched`);
+  //     }
+  //   })();
+  // }, [industry]);
 
   // useEffect(() => {
   //   (async () => {
@@ -184,7 +160,6 @@ export default function Stocks() {
             rowData={rowData}
             pagination={true}
             rowSelection="single"
-            //onSelectionChanged={navigateToPriceHistory}
             onGridReady={onGridReady}
           />
           <Button
@@ -197,13 +172,6 @@ export default function Stocks() {
             Go to open library API
           </Button>
         </div>
-      </div>
-      <div className="container">
-        {chartLoading ? (
-          (console.log("LOADING"), (<h1>Loading ...</h1>))
-        ) : (
-          <p>Testing</p>
-        )}
       </div>
     </div>
   );

@@ -3,12 +3,11 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, badge, Badge } from "reactstrap";
-import HistoryChart from "../components/HistoryChart.js";
-
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import HistoryChart from "../components/HistoryChart.js";
 import useAPI from "../components/API";
-import { useLocation, useParams } from "react-router-dom";
 // import { SelectionHandleType } from "ag-grid-community";
 
 // click on stock name to enter this page
@@ -26,16 +25,13 @@ const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
 const priceHistoryURL2 = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=`;
 
 export default function PriceHistory() {
-  //const location = useLocation();
-  const { symbol } = useParams();
-  //const priceHistoryURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${location.state.stockId}&apikey=`;
+  const { symbol } = useParams("");
   const priceHistoryURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=`;
   const { loading, data, error } = useAPI(priceHistoryURL, AA_API_KEY);
   const [chartLoading, setChartLoading] = useState(true);
   const [stockInfo, setStockInfo] = useState([]);
+  const [stockData, setStockData] = useState([]);
   const [rowData, setRowData] = useState([]);
-
-  const [stockH, setStockH] = useState([]);
 
   const columns = [
     { headerName: "Date", field: "date" },
@@ -46,9 +42,9 @@ export default function PriceHistory() {
     { headerName: "Volume", field: "volume" },
   ];
 
-  async function getRowData(stockHistory) {
+  async function getRowData(stockhistory) {
     // if (stocks == []) return []; // error checking??
-    return stockHistory.map((stock) => {
+    return stockhistory.map((stock) => {
       return {
         date: stock.date,
         open: stock["1. open"],
@@ -69,17 +65,18 @@ export default function PriceHistory() {
         }));
         setStockInfo(metaData[0]);
 
-        let stockHistory = Object.entries(data["Time Series (Daily)"]).map(
+        let stockhistory = Object.entries(data["Time Series (Daily)"]).map(
           ([date, x]) => ({
             date,
             ...x,
           })
         );
 
+        setStockData(stockhistory);
         setChartLoading(false);
-        setRowData(await getRowData(stockHistory)); // error checking ??
+        setRowData(await getRowData(stockhistory)); // error checking ??
       } catch {
-        console.log(`data still being fetched`);
+        console.log(`History data still being fetched` + error);
       }
     })();
   }, [data]);
@@ -87,16 +84,16 @@ export default function PriceHistory() {
   if (loading) {
     return <p>Loading...</p>; // wrong place?, use spinner
   }
-  if (chartLoading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
-  }
+  // if (chartLoading) {
+  //   return <p>Loading...</p>; // wrong place?, use spinner
+  // }
 
   if (error !== null) {
     return (alert = `${error}`); // this may be wrong, dont use alert
   }
 
   return (
-    <div className="Stocks">
+    <div className="StockHistry">
       <div className="container">
         {/* <SearchBar onSubmit={setSearch} /> */}
         {/* {companyData.map((company) => (
@@ -130,36 +127,12 @@ export default function PriceHistory() {
         </div>
       </div>
       <div className="container">
-        {error && (
-          <p class="error">
-            Sorry, something went wrong. Probably API limit exceeded. Please try
-            again later...
-          </p>
-        )}
-        {loading ? <h1>Loading ...</h1> : <HistoryChart data={stockH} />}
+        {error && <p class="error">Error. Please try again later...</p>}
+        {loading ? <h1>Loading ...</h1> : <HistoryChart data={stockData} />}
       </div>
     </div>
   );
 }
-
-// const labels = [1, 2, 3, 4, 5, 6, 7];
-// const data = {
-//   labels: labels,
-//   datasets: [
-//     {
-//       label: "My First Dataset",
-//       data: [65, 59, 80, 81, 56, 55, 40],
-//       fill: false,
-//       borderColor: "rgb(75, 192, 192)",
-//       tension: 0.1,
-//     },
-//   ],
-// };
-
-// const config = {
-//   type: "line",
-//   data: data,
-// };
 
 const TSD = {
   "Meta Data": {
@@ -202,8 +175,3 @@ const TSD = {
     },
   },
 };
-
-// function onGridReady(params) {
-//   setGridApi(params.api);
-//   setGridColumnApi(params.columnApi);
-// }

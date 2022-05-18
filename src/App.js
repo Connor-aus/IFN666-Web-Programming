@@ -7,6 +7,7 @@ import Stocks from "./pages/Stocks";
 import Quote from "./pages/Quote";
 import PriceHistory from "./pages/PriceHistory";
 import ErrorPage from "./pages/ErrorPage";
+import Industry from "./pages/Industry";
 
 import {
   BrowserRouter as Router,
@@ -35,6 +36,9 @@ function App() {
               <li>
                 <NavLink to="/pricehistory">Price History</NavLink>
               </li>
+              <li>
+                <NavLink to="/industry">Industry</NavLink>
+              </li>
             </ul>
           </nav>
         </div>
@@ -45,6 +49,9 @@ function App() {
         <Route path="/quote" element={<Quote />} />
         <Route path="/pricehistory" element={<PriceHistory />}>
           <Route path=":symbol" element={<PriceHistory />} />
+        </Route>
+        <Route path="/industry" element={<Industry />}>
+          <Route path=":industry" element={<Industry />} />
         </Route>
         <Route path="*" element={<ErrorPage />} />
       </Routes>
