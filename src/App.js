@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 
 import React, { useState } from "react";
@@ -7,6 +6,7 @@ import Home from "./pages/Home";
 import Stocks from "./pages/Stocks";
 import Quote from "./pages/Quote";
 import PriceHistory from "./pages/PriceHistory";
+import ErrorPage from "./pages/ErrorPage";
 
 import {
   BrowserRouter as Router,
@@ -43,7 +43,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/stocks" element={<Stocks />} />
         <Route path="/quote" element={<Quote />} />
-        <Route path="/pricehistory" element={<PriceHistory />} />
+        <Route path="/pricehistory" element={<PriceHistory />}>
+          <Route path=":symbol" element={<PriceHistory />} />
+        </Route>
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
   );

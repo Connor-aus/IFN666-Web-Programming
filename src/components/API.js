@@ -1,37 +1,34 @@
 import { useEffect, useState } from "react";
 
 const FMP_API_KEY = `e25ee6f07a20300466042dc2892848eb`;
+const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
 
 async function getData(endPoint, API_KEY, ...props) {
   const url = `${endPoint}${API_KEY}`;
   let res = await fetch(url); // json array
-  let data = await res.json();
+  // console.log("res = " + res); ////
 
-  return data;
+  try {
+    let stuff = await res.json(); // check res.status and data.status
+    // console.log("stuff = " + stuff); ////
 
-  // console.log(companyData[0].name);
-  // return companyData.map((company) => {
-  //   return {
-  //     symbol: company.symbol,
-  //     name: company.name,
-  //     industry: company.sector,
-  //   };
-  // });
-
-  //return res;
+    return stuff;
+  } catch {
+    return res;
+  }
 }
 
 export default function useAPI(endPoint, API_KEY, ...props) {
-  const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [data, setData] = useState();
   const [error, setError] = useState(null);
 
-  console.log("API FUNCTION called"); ////
+  // console.log("API FUNCTION called"); ////
 
   useEffect(() => {
     (async () => {
       try {
-        setStocks(await getData(endPoint, API_KEY, ...props));
+        setData(await getData(endPoint, API_KEY, ...props));
         setLoading(false);
         console.log("API called"); ////
       } catch (err) {
@@ -41,9 +38,11 @@ export default function useAPI(endPoint, API_KEY, ...props) {
     })();
   }, []);
 
+  // console.log("data = " + data); ////
+
   return {
     loading,
-    stocks,
+    data,
     error: null,
   };
 }

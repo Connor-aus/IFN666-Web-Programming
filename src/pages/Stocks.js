@@ -9,6 +9,8 @@ import { useState, useEffect } from "react";
 import SearchBar from "./../components/SearchBar";
 import useAPI from "../components/API";
 
+import { useNavigate, Link } from "react-router-dom";
+
 // show intro to webpage (about)
 // table with [symbol, name, industry]
 // table with industry performance ??
@@ -44,10 +46,75 @@ import useAPI from "../components/API";
 const FMP_API_KEY = `e25ee6f07a20300466042dc2892848eb`;
 const stockURL = `https://financialmodelingprep.com/api/v3/nasdaq_constituent?apikey=`;
 
+const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
+const industryURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
+
 export default function Stocks() {
+  //const navigate = useNavigate();
+  //const [stockId, setStockId] = useState("BPM");
+  const { loading, data, error } = useAPI(stockURL, FMP_API_KEY);
+  const [gridColumnApi, setGridColumnApi] = useState();
+  const [gridApi, setGridApi] = useState();
   const [rowData, setRowData] = useState([]);
+  const [searchedRowData, setSearchedRowData] = useState([]);
   const [search, setSearch] = useState("");
-  const { loading, stocks, error } = useAPI(stockURL, FMP_API_KEY);
+  const [industry, setIndustry] = useState("");
+  const [tableLoading, setTableLoading] = useState(true);
+  const [chartLoading, setChartLoading] = useState(true);
+
+  const columns = [
+    {
+      headerName: "Symbol",
+      field: "symbol",
+      cellRendererFramework: (params) => (
+        <Link to={`/PriceHistory/${params.value}`}>{params.value}</Link>
+      ),
+    },
+    {
+      headerName: "Name",
+      field: "name",
+      cellRendererFramework: (params) => {
+        let linkSymbol = symbolFinder(params);
+
+        // let linkSymbol = ``;
+        // let found = false;
+        // let rowLength = data.length;
+        // let count = 0;
+
+        // while (!found && count < rowLength) {
+        //   if (data[count].name == params.value) {
+        //     linkSymbol = data[count].symbol;
+        //     found = true;
+        //   }
+        //   count++;
+        // }
+        return <Link to={`/PriceHistory/${linkSymbol}`}>{params.value}</Link>;
+      },
+    },
+    {
+      headerName: "Industry",
+      field: "industry",
+      cellRendererFramework: (params) => (
+        <Link to={`/PriceHistory/${params.value}`}>{params.value}</Link>
+      ),
+    },
+  ];
+
+  async function symbolFinder(params) {
+    let rowLength = data.length;
+    let count = 0;
+    let notFound = `not found`;
+    while (count < rowLength) {
+      if (data[count].name == params.value) return data[count].symbol;
+      count++;
+    }
+    return notFound;
+  }
+
+  // const navigateToPriceHistory = (event) => {
+  //   const selectedRow = event.api.getSelectedRows()[0]["symbol"];
+  //   navigate(`../PriceHistory`, { state: { stockId: selectedRow } });
+  // };
 
   async function getRowData(stocks) {
     // if (stocks == []) return []; // error checking??
@@ -61,29 +128,50 @@ export default function Stocks() {
     });
   }
 
+  function onGridReady(params) {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  }
+
   useEffect(() => {
     (async () => {
-      setRowData(await getRowData(stocks)); // error checking ??
+      try {
+        //console.log(tableLoading);
+        //setTableLoading(false);
+        //console.log(loading);
+        setRowData(await getRowData(data)); // error checking ??
+      } catch {
+        console.log(`data still being fetched`);
+      }
     })();
-  }, [stocks]);
+  }, [data]);
 
-  if (loading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
-  }
+  // useEffect(() => {
+  //   (async () => {
+  //     setRowData(await getSearchedRowData(stocks)); // error checking ??
+  //   })();
+  // }, [search]);
 
-  if (error !== null) {
-    return (alert = `${error}`); // this may be wrong, dont use alert
-  }
+  // if (loading) {
+  //   return <p>Loading...</p>; // wrong place?, use spinner
+  // }
+
+  // if (tableLoading) {
+  //   return <p>Loading...</p>; // wrong place?, use spinner
+  // }
+
+  // if (error !== null) {
+  //   return (alert = `${error}`); // this may be wrong, dont use alert
+  // }
 
   return (
     <div className="Stocks">
-      <div className="container">
-        {/* <SearchBar onSubmit={setSearch} /> */}
-        {/* {companyData.map((company) => (
-          <Company {...company} />
-        ))} */}
-      </div>
-
+      {/* <div className="container">
+        <SearchBar onSubmit={setSearch} />
+        {headlines.map((headline) => (
+          <Headline {...headline} />
+        ))}
+      </div> */}
       <div className="container">
         <div
           className="ag-theme-balham"
@@ -95,6 +183,9 @@ export default function Stocks() {
             columnDefs={columns}
             rowData={rowData}
             pagination={true}
+            rowSelection="single"
+            //onSelectionChanged={navigateToPriceHistory}
+            onGridReady={onGridReady}
           />
           <Button
             color="info"
@@ -106,6 +197,13 @@ export default function Stocks() {
             Go to open library API
           </Button>
         </div>
+      </div>
+      <div className="container">
+        {chartLoading ? (
+          (console.log("LOADING"), (<h1>Loading ...</h1>))
+        ) : (
+          <p>Testing</p>
+        )}
       </div>
     </div>
   );
@@ -142,10 +240,4 @@ const companyData = [
     cik: "0000008670",
     founded: "1961-09-01",
   },
-];
-
-const columns = [
-  { headerName: "Symbol", field: "symbol" },
-  { headerName: "Name", field: "name" },
-  { headerName: "Industry", field: "industry" },
 ];
