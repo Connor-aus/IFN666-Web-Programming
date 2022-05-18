@@ -3,69 +3,56 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, badge, Badge } from "reactstrap";
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import IndustryChart from "../components/HistoryChart.js";
+import { getColumnData, getRowData } from "../components/IndustryTable";
 import useAPI from "../components/API";
-
-// click on stock name to enter this page
-// or click history link and search
-// present chart which will show the closing price
-// table with [date, opne, high, close, volumes]
-// chart below with [price, date] - selectDateFrom widget
-// chartJS (https://www.chartjs.org/) or d3 (https://d3js.org/). D3 is an advanced library and you shouldn’t attempt it unless you have prior experience.
-// show info about stock https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=xxxx
-
-// import chart from chartjs
-// import line from reactcharts-2
 
 const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
 const industryURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
 
 export default function PriceHistory() {
   //const { loading, data, error } = useAPI(industryURL, AA_API_KEY);
-  const { industry } = useParams("");
-  const [chartLoading, setChartLoading] = useState(false); // change to true
   const [industryData, setIndustryData] = useState([]);
   const [rowData, setRowData] = useState([]);
   const [columnData, setColumnData] = useState([]);
+  const [tableLoading, setTableLoading] = useState(true);
 
-  async function getRowData(stockHistory) {
-    // if (stocks == []) return []; // error checking??
-    let rows = [];
-    let temp = {};
-    let elementArray = [];
-    let arrayLength = stockHistory.length;
-    let objectLength = Object.keys(stockHistory[0]).length;
+  // async function getRowData(stockHistory) {
+  //   // if (stocks == []) return []; // error checking??
+  //   let rows = [];
+  //   let temp = {};
+  //   let elementArray = [];
+  //   let arrayLength = stockHistory.length;
+  //   let objectLength = Object.keys(stockHistory[0]).length;
 
-    stockHistory.forEach((element) => {
-      elementArray.push(element.title.slice(8));
-    });
+  //   stockHistory.forEach((element) => {
+  //     elementArray.push(element.title.slice(8));
+  //   });
 
-    for (let i = 1; i < objectLength; i++) {
-      temp = {};
-      let industryName = Object.keys(stockHistory[0])[i];
-      temp.industry = industryName;
+  //   for (let i = 1; i < objectLength; i++) {
+  //     temp = {};
+  //     let industryName = Object.keys(stockHistory[0])[i];
+  //     temp.industry = industryName;
 
-      for (let x = 0; x < arrayLength; x++) {
-        temp[`${elementArray[x]}`] = stockHistory[x][`${industryName}`];
-      }
-      rows.push(temp);
-    }
-    return rows;
-  }
+  //     for (let x = 0; x < arrayLength; x++) {
+  //       temp[`${elementArray[x]}`] = stockHistory[x][`${industryName}`];
+  //     }
+  //     rows.push(temp);
+  //   }
+  //   return rows;
+  // }
 
-  async function getColumnData(stockHistory) {
-    // if (stocks == []) return []; // error checking??
-    let columns = [{ headerName: `Industry`, field: `industry` }];
+  // async function getColumnData(stockHistory) {
+  //   // if (stocks == []) return []; // error checking??
+  //   let columns = [{ headerName: `Industry`, field: `industry` }];
 
-    stockHistory.forEach((element) => {
-      let coloumn = element.title.slice(8);
-      columns.push({ headerName: coloumn, field: coloumn });
-    });
-    return columns;
-  }
+  //   stockHistory.forEach((element) => {
+  //     let coloumn = element.title.slice(8);
+  //     columns.push({ headerName: coloumn, field: coloumn });
+  //   });
+  //   return columns;
+  // }
 
   useEffect(() => {
     (async () => {
@@ -77,10 +64,9 @@ export default function PriceHistory() {
           })
         );
 
-        industryInfo.shift();
-        setIndustryData(industryInfo);
-        setChartLoading(false);
+        setIndustryData(exampleIndustry);
 
+        industryInfo.shift();
         setColumnData(await getColumnData(industryInfo));
         setRowData(await getRowData(industryInfo)); // error checking ??
       } catch {
@@ -89,13 +75,13 @@ export default function PriceHistory() {
     })();
   }, [exampleIndustry]);
 
-  // if (loading) {
+  // if (loading || tableLoading) {
   //   return <p>Loading...</p>; // wrong place?, use spinner
   // }
 
-  if (chartLoading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
-  }
+  // if (loading2) {
+  //   return <p>Loading...</p>; // wrong place?, use spinner
+  // }
 
   // if (error !== null) {
   //   return (alert = `${error}`); // this may be wrong, dont use alert
@@ -104,20 +90,16 @@ export default function PriceHistory() {
   return (
     <div className="Industry">
       <div className="container">
-        {/* <SearchBar onSubmit={setSearch} /> */}
-        {/* {companyData.map((company) => (
-          <Company {...company} />
-        ))} */}
-      </div>
-      <div className="container">
         <div
           className="ag-theme-balham"
           style={{ height: "300px", width: "100%" }}
         >
-          <h1>{industry ?? <h1>Industry</h1>}</h1>
+          <h1>Industry Performance</h1>
           <p>
             Showing Industry performance - last refeshed{" "}
-            {/* {industryData[0]["Last Refreshed"]} */}
+            {tableLoading
+              ? "[Not Available]"
+              : industryData[`Meta Data`][`Last Refreshed`]}
           </p>
           <AgGridReact
             columnDefs={columnData}
@@ -135,14 +117,7 @@ export default function PriceHistory() {
           </Button>
         </div>
       </div>
-      <div className="container">
-        {/* {error && <p class="error">Error. Please try again later...</p>} */}
-        {chartLoading ? (
-          <h1>Loading ...</h1>
-        ) : (
-          <IndustryChart data={industryData} />
-        )}
-      </div>
+      <div className="container"></div>
     </div>
   );
 }

@@ -16,15 +16,18 @@ export default function SearchBar(props) {
         id="search"
         type="search"
         value={innerSearch}
-        onChange={(e) => setInnerSearch(e.target.value)}
+        onChange={(e) => {
+          setInnerSearch(e.target.value);
+          props.onChange(innerSearch);
+        }}
       />
-      <button
+      {/* <button
         id="search=button"
         type="button"
         onClick={() => props.onSubmit(innerSearch)}
       >
         Search
-      </button>
+      </button> */}
     </div>
   );
 }

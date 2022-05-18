@@ -7,7 +7,9 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import HistoryChart from "../components/HistoryChart.js";
+import CompanyInfo from "../components/CompanyInfo.js";
 import useAPI from "../components/API";
+
 // import { SelectionHandleType } from "ag-grid-community";
 
 // click on stock name to enter this page
@@ -99,6 +101,9 @@ export default function PriceHistory() {
         {/* {companyData.map((company) => (
           <Company {...company} />
         ))} */}
+      </div>
+      <div className="container">
+        <CompanyInfo />
       </div>
       <div className="container">
         <div

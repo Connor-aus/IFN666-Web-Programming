@@ -3,9 +3,10 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, badge, Badge } from "reactstrap";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import { getColumnData, getRowData } from "../components/StockTable";
 import SearchBar from "./../components/SearchBar";
 import useAPI from "../components/API";
 
@@ -35,119 +36,84 @@ export default function Stocks() {
   const { loading, data, error } = useAPI(stockURL, FMP_API_KEY);
   const [gridColumnApi, setGridColumnApi] = useState();
   const [gridApi, setGridApi] = useState();
-  const [rowData, setRowData] = useState([]);
   const [search, setSearch] = useState("");
+  const [searchData, setSearchData] = useState([]);
+  const [rowData, setRowData] = useState([]);
+  const [coloumnData, setColumnData] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [chartLoading, setChartLoading] = useState(true);
-
-  const columns = [
-    {
-      headerName: "Symbol",
-      field: "symbol",
-      cellRendererFramework: (params) => (
-        <Link to={`/PriceHistory/${params.value}`}>{params.value}</Link>
-      ),
-    },
-    {
-      headerName: "Name",
-      field: "name",
-      cellRendererFramework: (params) => {
-        let linkSymbol = symbolFinder(params);
-        return <Link to={`/PriceHistory/${linkSymbol}`}>{params.value}</Link>;
-      },
-    },
-    {
-      headerName: "Industry",
-      field: "industry",
-      cellRendererFramework: (params) => (
-        <Link to={`/Industry/${params.value}`}>{params.value}</Link>
-      ),
-    },
-  ];
 
   function onGridReady(params) {
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
   }
 
-  async function symbolFinder(params) {
-    let rowLength = data.length;
-    let count = 0;
-    let notFound = `not found`;
-    while (count < rowLength) {
-      if (data[count].name == params.value) return data[count].symbol;
-      count++;
-    }
-    return notFound;
-  }
+  // function symbolFinder(params) {
+  //   let rowLength = data.length;
+  //   let count = 0;
+  //   let notFound = `not found`;
+  //   while (count < rowLength) {
+  //     if (data[count].name == params.value) return data[count].symbol;
+  //     count++;
+  //   }
+  //   return notFound;
+  // }
 
-  async function getRowData(stocks) {
-    // if (stocks == []) return []; // error checking??
+  // async function getRowData(stocks) {
+  //   // if (stocks == []) return []; // error checking??
 
-    return stocks.map((stock) => {
-      return {
-        symbol: stock.symbol,
-        name: stock.name,
-        industry: stock.sector,
-      };
-    });
-  }
+  //   return stocks.map((stock) => {
+  //     return {
+  //       symbol: stock.symbol,
+  //       name: stock.name,
+  //       industry: stock.sector,
+  //     };
+  //   });
+  // }
 
   useEffect(() => {
     (async () => {
       try {
-        //console.log(tableLoading);
-        //setTableLoading(false);
-        //console.log(loading);
-        setRowData(await getRowData(data)); // error checking ??
+        let rows = await getRowData(data);
+        setRowData(rows); // error checking ??
+        setSearchData(rows); // error checking ??
+        setColumnData(getColumnData(data));
+        setTableLoading(false); // correct
+        setChartLoading(false); // correct
       } catch {
         console.log(`Stock data still being fetched` + error);
       }
     })();
   }, [data]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       if (industryData == []) {
-  //         console.log("calling industry API");
-  //         {
-  //         }
-  //         setIndustryData(await useAPI(industryURL, AA_API_KEY));
-  //       }
-  //       setRowData(await getRowData(data)); // error checking ??
-  //     } catch {
-  //       console.log(`data still being fetched`);
-  //     }
-  //   })();
-  // }, [industry]);
+  useEffect(() => {
+    (async () => {
+      setSearchData(filterData(rowData));
+    })();
+  }, [search]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     setRowData(await getSearchedRowData(stocks)); // error checking ??
-  //   })();
-  // }, [search]);
+  function filterData(rowData) {
+    return rowData.filter(
+      (row) =>
+        row.symbol.toLowerCase().indexOf(search) > -1 ||
+        row.name.toLowerCase().indexOf(search) > -1
+    );
+  }
 
-  // if (loading) {
-  //   return <p>Loading...</p>; // wrong place?, use spinner
-  // }
+  if (loading || chartLoading || tableLoading) {
+    return <p>Loading...</p>; // wrong place?, use spinner
+  }
 
-  // if (tableLoading) {
-  //   return <p>Loading...</p>; // wrong place?, use spinner
-  // }
-
-  // if (error !== null) {
-  //   return (alert = `${error}`); // this may be wrong, dont use alert
-  // }
+  if (error !== null) {
+    return (alert = `${error}`); // this may be wrong, dont use alert
+  }
 
   return (
     <div className="Stocks">
-      {/* <div className="container">
-        <SearchBar onSubmit={setSearch} />
-        {headlines.map((headline) => (
-          <Headline {...headline} />
-        ))}
-      </div> */}
+      <div className="container">
+        <h1>Search</h1>
+        <SearchBar onChange={setSearch} />
+      </div>
       <div className="container">
         <div
           className="ag-theme-balham"
@@ -156,8 +122,8 @@ export default function Stocks() {
           <h1>Stocks</h1>
           <Badge colour="success">{rowData.length}</Badge> Companies listed
           <AgGridReact
-            columnDefs={columns}
-            rowData={rowData}
+            columnDefs={coloumnData}
+            rowData={searchData}
             pagination={true}
             rowSelection="single"
             onGridReady={onGridReady}
