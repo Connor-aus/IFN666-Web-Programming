@@ -3,6 +3,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
 export default function IndustryTable({ data }) {
   const [rowData, setRowData] = useState([]);
@@ -38,29 +39,41 @@ export default function IndustryTable({ data }) {
   }
 
   return (
-    <div className="IndustryTable">
-      <div
-        className="ag-theme-balham"
-        style={{ height: "300px", width: "100%" }}
-      >
-        <h1>Industry Performance</h1>
-        <p>
-          Showing Industry performance - last refeshed{" "}
-          {data[`Meta Data`][`Last Refreshed`]}
-        </p>
-        <AgGridReact
-          columnDefs={columnData}
-          rowData={rowData}
-          pagination={true}
-          defaultColDef={{
-            flex: 1,
-            resizable: true,
-            columnHoverHighlight: true,
-            sortable: true,
-          }}
-        />
-      </div>
-    </div>
+    <Container>
+      <Row>
+        <div className="IndustryTable">
+          <h1>Industry Performance</h1>
+          <p>
+            Showing Industry performance - last refeshed{" "}
+            {data[`Meta Data`][`Last Refreshed`]}
+          </p>
+          <Row>
+            <Col>
+              <div
+                className="ag-theme-balham"
+                style={{
+                  height: "300px",
+                  width: "100%",
+                  marginBottom: "150px",
+                }}
+              >
+                <AgGridReact
+                  columnDefs={columnData}
+                  rowData={rowData}
+                  pagination={true}
+                  defaultColDef={{
+                    flex: 1,
+                    resizable: true,
+                    columnHoverHighlight: true,
+                    sortable: true,
+                  }}
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </Row>
+    </Container>
   );
 }
 

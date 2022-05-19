@@ -2,12 +2,13 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, badge, Badge } from "reactstrap";
+import { Badge } from "reactstrap";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import { Container, Row, Col } from "react-bootstrap";
 import { IndustryDropDown, filterIndustryData } from "./IndustryDropDown";
 import { SearchBar, filterCompanyData } from "./../components/SearchBar";
+import "../customcss.css";
 
 export default function StockTable({ data }) {
   const [gridColumnApi, setGridColumnApi] = useState();
@@ -57,38 +58,47 @@ export default function StockTable({ data }) {
   }, [industrySelection]);
 
   if (tableLoading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return <p>Loading ...</p>; // wrong place?, use spinner
   }
 
   return (
-    <div className="StockTable">
-      <div className="container">
-        <h1>Search</h1>
-        <SearchBar onChange={setSearch} />
-        <IndustryDropDown onChange={setIndustrySelection} />
+    <Container>
+      <div className="StockTable">
+        <Row>
+          <Col>
+            <h1>Stocks</h1>
+          </Col>
+          <Col>
+            <h3>Search</h3>
+            <SearchBar onChange={setSearch} />
+          </Col>
+          <Col className="justify-content-md-right">
+            <h3>Filter</h3>
+            <IndustryDropDown onChange={setIndustrySelection} />
+          </Col>
+        </Row>
+        <Badge colour="success">{rowData.length}</Badge> Companies list
+        <Row>
+          <div
+            className="ag-theme-balham"
+            style={{ height: "300px", width: "100%", marginBottom: "150px" }}
+          >
+            <AgGridReact
+              columnDefs={coloumnData}
+              rowData={searchData}
+              pagination={true}
+              rowSelection="single"
+              defaultColDef={{
+                flex: 1,
+                resizable: true,
+                columnHoverHighlight: true,
+              }}
+              onGridReady={onGridReady}
+            />
+          </div>
+        </Row>
       </div>
-      <div className="container">
-        <div
-          className="ag-theme-balham"
-          style={{ height: "300px", width: "100%" }}
-        >
-          <h1>Stocks</h1>
-          <Badge colour="success">{rowData.length}</Badge> Companies list
-          <AgGridReact
-            columnDefs={coloumnData}
-            rowData={searchData}
-            pagination={true}
-            rowSelection="single"
-            defaultColDef={{
-              flex: 1,
-              resizable: true,
-              columnHoverHighlight: true,
-            }}
-            onGridReady={onGridReady}
-          />
-        </div>
-      </div>
-    </div>
+    </Container>
   );
 }
 

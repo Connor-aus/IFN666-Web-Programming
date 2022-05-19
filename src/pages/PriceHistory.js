@@ -1,6 +1,3 @@
-import { Button, badge, Badge } from "reactstrap";
-import { useParams } from "react-router-dom";
-
 import HistoryChart from "../components/HistoryChart.js";
 import HistoryTable from "../components/HistoryTable.js";
 import CompanyInfo from "../components/CompanyInfo.js";
@@ -8,6 +5,9 @@ import useAPI from "../components/API";
 import ErrorAlert from "../components/ErrorAlert.js";
 import LoadingSymbol from "../components/LoadingSymbol.js";
 import "../customcss.css";
+
+import { useParams } from "react-router-dom";
+import { Container, Row, Card } from "react-bootstrap";
 
 export default function PriceHistory() {
   const { symbol } = useParams("");
@@ -42,25 +42,27 @@ export default function PriceHistory() {
   }
 
   return (
-    <div className="StockHistry">
-      <div className="container"></div>
-      <div className="container">
-        <CompanyInfo data={symbol} />
+    <Container>
+      <div className="StockHistry">
+        <Row>
+          <CompanyInfo data={symbol} />
+        </Row>
+        <Row>
+          <HistoryTable
+            data={data}
+            alt="Table displaying company performance"
+          />
+        </Row>
+        <Row>
+          <Container>
+            <HistoryChart
+              data={data}
+              alt="Chart displaying company performance"
+            />
+          </Container>
+        </Row>
       </div>
-      <HistoryTable data={data} />
-      <Button
-        color="info"
-        size="sm"
-        className="mt-3"
-        href="https://www.alphavantage.co/documentation/"
-        target="_blank"
-      >
-        Go to open library API
-      </Button>
-      <div className="container">
-        {loading ? <h1>Loading ...</h1> : <HistoryChart data={data} />}
-      </div>
-    </div>
+    </Container>
   );
 }
 

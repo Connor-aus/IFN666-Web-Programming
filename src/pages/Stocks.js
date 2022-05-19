@@ -1,9 +1,10 @@
-import { Button, badge, Badge } from "reactstrap";
-
 import StockTable from "../components/StockTable";
 import useAPI from "../components/API";
 import ErrorAlert from "../components/ErrorAlert";
 import "../customcss.css";
+import LoadingSymbol from "../components/LoadingSymbol";
+
+import { Container } from "react-bootstrap";
 
 // FMP API https://site.financialmodelingprep.com/developer
 // API key https://site.financialmodelingprep.com/register
@@ -27,7 +28,11 @@ export default function Stocks() {
   const { loading, data, error } = useAPI(stockURL, FMP_API_KEY);
 
   if (loading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return (
+      <div className="LoadingSymbol">
+        <LoadingSymbol />;
+      </div>
+    );
   }
 
   if (error !== null) {
@@ -35,18 +40,11 @@ export default function Stocks() {
   }
 
   return (
-    <div className="Stocks" Alt text>
-      {loading ? "[Loading table ...]" : <StockTable data={data} />}
-      <Button
-        color="info"
-        size="sm"
-        className="mt-3"
-        href="https://site.financialmodelingprep.com/developer/docs"
-        target="_blank"
-      >
-        Go to open library API
-      </Button>
-    </div>
+    <Container>
+      <div className="Stocks" Alt text>
+        <StockTable data={data} />
+      </div>
+    </Container>
   );
 }
 

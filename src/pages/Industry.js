@@ -1,9 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, badge, Badge } from "reactstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 import IndustryTable from "../components/IndustryTable";
 import useAPI from "../components/API";
 import ErrorAlert from "../components/ErrorAlert";
+import LoadingSymbol from "../components/LoadingSymbol";
 import "../customcss.css";
 
 export default function PriceHistory() {
@@ -12,7 +13,11 @@ export default function PriceHistory() {
   const { loading, data, error } = useAPI(industryURL, AA_API_KEY);
 
   if (loading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return (
+      <div className="LoadingSymbol">
+        <LoadingSymbol />;
+      </div>
+    );
   }
 
   if (error !== null) {
@@ -20,21 +25,12 @@ export default function PriceHistory() {
   }
 
   return (
-    <div className="Industry">
-      <div className="container">
-        {loading ? "[Loading table ...]" : <IndustryTable data={data} />}
-        <Button
-          color="info"
-          size="sm"
-          className="mt-3"
-          href="https://www.alphavantage.co/documentation/"
-          target="_blank"
-        >
-          Go to open library API
-        </Button>
+    <Container>
+      <div className="Industry" alt="Table of industry data">
+        <IndustryTable data={data} />
       </div>
-      <div className="container"></div>
-    </div>
+      <Row></Row>
+    </Container>
   );
 }
 

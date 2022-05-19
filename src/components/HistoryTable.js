@@ -47,7 +47,7 @@ export default function HistoryTable({ data }) {
       <div className="container">
         <div
           className="ag-theme-balham"
-          style={{ height: "300px", width: "100%" }}
+          style={{ height: "300px", width: "100%", marginBottom: "150px" }}
         >
           <h1>Price History - {stockInfo["2. Symbol"]}</h1>
           <p>

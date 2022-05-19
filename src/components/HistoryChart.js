@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import { NonceProvider } from "react-select";
+import { Container } from "reactstrap";
 
 export default function HistoryTable({ data }) {
   const [chartLoading, setChartLoading] = useState(true);
@@ -71,9 +72,11 @@ export default function HistoryTable({ data }) {
   }
 
   return (
-    <div className="HistoryChart">
-      <Line data={chartData} options={options} />
-    </div>
+    <Container style={{ marginBottom: "80px" }}>
+      <div className="HistoryChart">
+        <Line data={chartData} options={options} />
+      </div>
+    </Container>
   );
 }
 
