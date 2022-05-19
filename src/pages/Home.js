@@ -1,14 +1,16 @@
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-balham.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, badge, Badge } from "reactstrap";
-
-import { useState, useEffect } from "react";
-
-import useAPI from "../components/API";
-
-// show intro to webpage (about)
+// variable names in Tables and
+// stocks table in component
+// homne page (about)
+// Industry dropdown
+// sort columns in Industry
+// date slider
+// another chart?? check Criteria
+// css
+// error handling
+// loading
+// screen reading
+// report
+// video
 
 export default function Home() {
   return (

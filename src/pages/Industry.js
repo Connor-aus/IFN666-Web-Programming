@@ -1,123 +1,38 @@
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, badge, Badge } from "reactstrap";
-import { useState, useEffect } from "react";
 
-import { getColumnData, getRowData } from "../components/IndustryTable";
+import IndustryTable from "../components/IndustryTable";
 import useAPI from "../components/API";
 
-const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
-const industryURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
-
 export default function PriceHistory() {
-  //const { loading, data, error } = useAPI(industryURL, AA_API_KEY);
-  const [industryData, setIndustryData] = useState([]);
-  const [rowData, setRowData] = useState([]);
-  const [columnData, setColumnData] = useState([]);
-  const [tableLoading, setTableLoading] = useState(true);
+  const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
+  const industryURL = `https://www.alphavantage.co/query?function=SECTOR&apikey==IBM&apikey=`;
+  const { loading, data, error } = useAPI(industryURL, AA_API_KEY);
 
-  // async function getRowData(stockHistory) {
-  //   // if (stocks == []) return []; // error checking??
-  //   let rows = [];
-  //   let temp = {};
-  //   let elementArray = [];
-  //   let arrayLength = stockHistory.length;
-  //   let objectLength = Object.keys(stockHistory[0]).length;
+  if (loading) {
+    return <p>Loading...</p>; // wrong place?, use spinner
+  }
 
-  //   stockHistory.forEach((element) => {
-  //     elementArray.push(element.title.slice(8));
-  //   });
-
-  //   for (let i = 1; i < objectLength; i++) {
-  //     temp = {};
-  //     let industryName = Object.keys(stockHistory[0])[i];
-  //     temp.industry = industryName;
-
-  //     for (let x = 0; x < arrayLength; x++) {
-  //       temp[`${elementArray[x]}`] = stockHistory[x][`${industryName}`];
-  //     }
-  //     rows.push(temp);
-  //   }
-  //   return rows;
-  // }
-
-  // async function getColumnData(stockHistory) {
-  //   // if (stocks == []) return []; // error checking??
-  //   let columns = [{ headerName: `Industry`, field: `industry` }];
-
-  //   stockHistory.forEach((element) => {
-  //     let coloumn = element.title.slice(8);
-  //     columns.push({ headerName: coloumn, field: coloumn });
-  //   });
-  //   return columns;
-  // }
-
-  useEffect(() => {
-    (async () => {
-      try {
-        let industryInfo = Object.entries(exampleIndustry).map(
-          ([title, x]) => ({
-            title,
-            ...x,
-          })
-        );
-
-        setIndustryData(exampleIndustry);
-
-        industryInfo.shift();
-        setColumnData(await getColumnData(industryInfo));
-        setRowData(await getRowData(industryInfo)); // error checking ??
-      } catch {
-        console.log(`Industry data still being fetched `);
-      }
-    })();
-  }, [exampleIndustry]);
-
-  // if (loading || tableLoading) {
-  //   return <p>Loading...</p>; // wrong place?, use spinner
-  // }
-
-  // if (loading2) {
-  //   return <p>Loading...</p>; // wrong place?, use spinner
-  // }
-
-  // if (error !== null) {
-  //   return (alert = `${error}`); // this may be wrong, dont use alert
-  // }
+  if (error !== null) {
+    return (alert = `${error}`); // this may be wrong, dont use alert
+  }
 
   return (
     <div className="Industry">
       <div className="container">
-        <div
-          className="ag-theme-balham"
-          style={{ height: "300px", width: "100%" }}
+        {loading ? "[Loading table ...]" : <IndustryTable data={data} />}
+        <Button
+          color="info"
+          size="sm"
+          className="mt-3"
+          href="https://www.alphavantage.co/documentation/"
+          target="_blank"
         >
-          <h1>Industry Performance</h1>
-          <p>
-            Showing Industry performance - last refeshed{" "}
-            {tableLoading
-              ? "[Not Available]"
-              : industryData[`Meta Data`][`Last Refreshed`]}
-          </p>
-          <AgGridReact
-            columnDefs={columnData}
-            rowData={rowData}
-            pagination={true}
-          />
-          <Button
-            color="info"
-            size="sm"
-            className="mt-3"
-            href="https://www.alphavantage.co/documentation/"
-            target="_blank"
-          >
-            Go to open library API
-          </Button>
-        </div>
+          Go to open library API
+        </Button>
       </div>
       <div className="container"></div>
+      //{" "}
     </div>
   );
 }

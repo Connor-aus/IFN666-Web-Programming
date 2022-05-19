@@ -5,7 +5,7 @@ const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
 const industryInfoURL = `//www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
 
 export default function CompanyInfo() {
-  //const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
+  // const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
 
   // if (loading) {
   //   return <p>Loading...</p>; // wrong place?, use spinner

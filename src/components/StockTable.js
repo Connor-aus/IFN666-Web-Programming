@@ -1,6 +1,86 @@
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Button, badge, Badge } from "reactstrap";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export function getColumnData(data) {
+import { SearchBar, filterData } from "./../components/SearchBar";
+
+export default function StockTable({ data }) {
+  const [gridColumnApi, setGridColumnApi] = useState();
+  const [gridApi, setGridApi] = useState();
+  const [dataUpdate, setDataUpdate] = useState();
+  const [search, setSearch] = useState("");
+  const [searchData, setSearchData] = useState([]);
+  const [rowData, setRowData] = useState([]);
+  const [coloumnData, setColumnData] = useState([]);
+  const [tableLoading, setTableLoading] = useState(true);
+
+  // check for updated data then set rerender
+  setTimeout(() => {
+    setDataUpdate(data);
+  }, 100);
+
+  function onGridReady(params) {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  }
+
+  useEffect(() => {
+    (async () => {
+      console.log("Stock table begun");
+
+      try {
+        let rows = await getRowData(data);
+        setRowData(rows); // error checking ??
+        setSearchData(rows); // error checking ??
+        setColumnData(await getColumnData(data));
+        setTableLoading(false);
+      } catch {
+        console.log(`Stock data still being fetched.`);
+      }
+    })();
+  }, [dataUpdate, search]);
+
+  useEffect(() => {
+    (async () => {
+      setSearchData(await filterData(rowData, search));
+    })();
+  }, [search]);
+
+  if (tableLoading) {
+    return <p>Loading...</p>; // wrong place?, use spinner
+  }
+
+  return (
+    <div className="StockTable">
+      <div className="container">
+        <h1>Search</h1>
+        <SearchBar onChange={setSearch} />
+      </div>
+      <div className="container">
+        <div
+          className="ag-theme-balham"
+          style={{ height: "300px", width: "100%" }}
+        >
+          <h1>Stocks</h1>
+          <Badge colour="success">{rowData.length}</Badge> Companies list
+          <AgGridReact
+            columnDefs={coloumnData}
+            rowData={searchData}
+            pagination={true}
+            rowSelection="single"
+            onGridReady={onGridReady}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function getColumnData(data) {
   return [
     {
       headerName: "Symbol",
@@ -38,9 +118,8 @@ function symbolFinder(params, data) {
   return notFound;
 }
 
-export async function getRowData(stocks) {
+async function getRowData(stocks) {
   // if (stocks == []) return []; // error checking??
-
   return stocks.map((stock) => {
     return {
       symbol: stock.symbol,

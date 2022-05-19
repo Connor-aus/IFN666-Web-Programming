@@ -5,7 +5,7 @@ import { useState } from "react";
 // industry category selector (drop down)
 // table below should show [stock, name, industry]
 
-export default function SearchBar(props) {
+export function SearchBar(props) {
   const [innerSearch, setInnerSearch] = useState("");
 
   return (
@@ -29,5 +29,13 @@ export default function SearchBar(props) {
         Search
       </button> */}
     </div>
+  );
+}
+
+export async function filterData(rowData, search) {
+  return rowData.filter(
+    (row) =>
+      row.symbol.toLowerCase().indexOf(search) > -1 ||
+      row.name.toLowerCase().indexOf(search) > -1
   );
 }

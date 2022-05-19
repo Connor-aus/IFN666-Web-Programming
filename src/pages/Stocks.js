@@ -1,13 +1,6 @@
-import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-balham.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, badge, Badge } from "reactstrap";
-// import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 
-import { getColumnData, getRowData } from "../components/StockTable";
-import SearchBar from "./../components/SearchBar";
+import StockTable from "../components/StockTable";
 import useAPI from "../components/API";
 
 // FMP API https://site.financialmodelingprep.com/developer
@@ -26,81 +19,12 @@ import useAPI from "../components/API";
 // Alpha search for daily trading data https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=xxxx
 // Alpha search history https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=IBM&apikey=demo
 
-const FMP_API_KEY = `e25ee6f07a20300466042dc2892848eb`;
-const stockURL = `https://financialmodelingprep.com/api/v3/nasdaq_constituent?apikey=`;
-
-const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
-const industryURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
-
 export default function Stocks() {
+  const FMP_API_KEY = `e25ee6f07a20300466042dc2892848eb`;
+  const stockURL = `https://financialmodelingprep.com/api/v3/nasdaq_constituent?apikey=`;
   const { loading, data, error } = useAPI(stockURL, FMP_API_KEY);
-  const [gridColumnApi, setGridColumnApi] = useState();
-  const [gridApi, setGridApi] = useState();
-  const [search, setSearch] = useState("");
-  const [searchData, setSearchData] = useState([]);
-  const [rowData, setRowData] = useState([]);
-  const [coloumnData, setColumnData] = useState([]);
-  const [tableLoading, setTableLoading] = useState(true);
-  const [chartLoading, setChartLoading] = useState(true);
 
-  function onGridReady(params) {
-    setGridApi(params.api);
-    setGridColumnApi(params.columnApi);
-  }
-
-  // function symbolFinder(params) {
-  //   let rowLength = data.length;
-  //   let count = 0;
-  //   let notFound = `not found`;
-  //   while (count < rowLength) {
-  //     if (data[count].name == params.value) return data[count].symbol;
-  //     count++;
-  //   }
-  //   return notFound;
-  // }
-
-  // async function getRowData(stocks) {
-  //   // if (stocks == []) return []; // error checking??
-
-  //   return stocks.map((stock) => {
-  //     return {
-  //       symbol: stock.symbol,
-  //       name: stock.name,
-  //       industry: stock.sector,
-  //     };
-  //   });
-  // }
-
-  useEffect(() => {
-    (async () => {
-      try {
-        let rows = await getRowData(data);
-        setRowData(rows); // error checking ??
-        setSearchData(rows); // error checking ??
-        setColumnData(getColumnData(data));
-        setTableLoading(false); // correct
-        setChartLoading(false); // correct
-      } catch {
-        console.log(`Stock data still being fetched` + error);
-      }
-    })();
-  }, [data]);
-
-  useEffect(() => {
-    (async () => {
-      setSearchData(filterData(rowData));
-    })();
-  }, [search]);
-
-  function filterData(rowData) {
-    return rowData.filter(
-      (row) =>
-        row.symbol.toLowerCase().indexOf(search) > -1 ||
-        row.name.toLowerCase().indexOf(search) > -1
-    );
-  }
-
-  if (loading || chartLoading || tableLoading) {
+  if (loading) {
     return <p>Loading...</p>; // wrong place?, use spinner
   }
 
@@ -110,35 +34,17 @@ export default function Stocks() {
 
   return (
     <div className="Stocks">
-      <div className="container">
-        <h1>Search</h1>
-        <SearchBar onChange={setSearch} />
-      </div>
-      <div className="container">
-        <div
-          className="ag-theme-balham"
-          style={{ height: "300px", width: "100%" }}
-        >
-          <h1>Stocks</h1>
-          <Badge colour="success">{rowData.length}</Badge> Companies listed
-          <AgGridReact
-            columnDefs={coloumnData}
-            rowData={searchData}
-            pagination={true}
-            rowSelection="single"
-            onGridReady={onGridReady}
-          />
-          <Button
-            color="info"
-            size="sm"
-            className="mt-3"
-            href="https://site.financialmodelingprep.com/developer/docs"
-            target="_blank"
-          >
-            Go to open library API
-          </Button>
-        </div>
-      </div>
+      {loading ? "[Loading table ...]" : <StockTable data={data} />}
+      {/* <StockTable data={data} /> */}
+      <Button
+        color="info"
+        size="sm"
+        className="mt-3"
+        href="https://site.financialmodelingprep.com/developer/docs"
+        target="_blank"
+      >
+        Go to open library API
+      </Button>
     </div>
   );
 }
