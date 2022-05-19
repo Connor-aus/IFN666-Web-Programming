@@ -35,7 +35,6 @@ export default function Stocks() {
   return (
     <div className="Stocks">
       {loading ? "[Loading table ...]" : <StockTable data={data} />}
-      {/* <StockTable data={data} /> */}
       <Button
         color="info"
         size="sm"

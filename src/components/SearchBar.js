@@ -1,10 +1,5 @@
 import { useState } from "react";
 
-// select stock (search with predictive)
-// search button
-// industry category selector (drop down)
-// table below should show [stock, name, industry]
-
 export function SearchBar(props) {
   const [innerSearch, setInnerSearch] = useState("");
 
@@ -18,7 +13,7 @@ export function SearchBar(props) {
         value={innerSearch}
         onChange={(e) => {
           setInnerSearch(e.target.value);
-          props.onChange(innerSearch);
+          props.onChange(e.target.value);
         }}
       />
       {/* <button
@@ -32,10 +27,13 @@ export function SearchBar(props) {
   );
 }
 
-export async function filterData(rowData, search) {
+// add both cases
+export async function filterCompanyData(rowData, search) {
   return rowData.filter(
     (row) =>
       row.symbol.toLowerCase().indexOf(search) > -1 ||
-      row.name.toLowerCase().indexOf(search) > -1
+      row.name.toLowerCase().indexOf(search) > -1 ||
+      row.symbol.toUpperCase().indexOf(search) > -1 ||
+      row.name.toUpperCase().indexOf(search) > -1
   );
 }

@@ -1,6 +1,11 @@
-// variable names in Tables and
-// stocks table in component
 // homne page (about)
+
+//Below is the initial landing page. It should have a
+// small piece of information describing the stock exchange
+// and well as links to a stocks and search page.  You should
+// also include a header and an image. You should make wise
+// choices for how to present all the information together.
+
 // Industry dropdown
 // sort columns in Industry
 // date slider

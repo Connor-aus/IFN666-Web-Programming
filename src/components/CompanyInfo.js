@@ -4,6 +4,8 @@ import useAPI from "./API";
 const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
 const industryInfoURL = `//www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
 
+// add industry of this company
+
 export default function CompanyInfo() {
   // const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
 

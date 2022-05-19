@@ -6,7 +6,8 @@ import { Button, badge, Badge } from "reactstrap";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { SearchBar, filterData } from "./../components/SearchBar";
+import { IndustryDropDown, filterIndustryData } from "./IndustryDropDown";
+import { SearchBar, filterCompanyData } from "./../components/SearchBar";
 
 export default function StockTable({ data }) {
   const [gridColumnApi, setGridColumnApi] = useState();
@@ -14,6 +15,7 @@ export default function StockTable({ data }) {
   const [dataUpdate, setDataUpdate] = useState();
   const [search, setSearch] = useState("");
   const [searchData, setSearchData] = useState([]);
+  const [industrySelection, setIndustrySelection] = useState("");
   const [rowData, setRowData] = useState([]);
   const [coloumnData, setColumnData] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
@@ -30,8 +32,6 @@ export default function StockTable({ data }) {
 
   useEffect(() => {
     (async () => {
-      console.log("Stock table begun");
-
       try {
         let rows = await getRowData(data);
         setRowData(rows); // error checking ??
@@ -39,16 +39,22 @@ export default function StockTable({ data }) {
         setColumnData(await getColumnData(data));
         setTableLoading(false);
       } catch {
-        console.log(`Stock data still being fetched.`);
+        console.log(`Stock Table still being constucted.`);
       }
     })();
   }, [dataUpdate, search]);
 
   useEffect(() => {
     (async () => {
-      setSearchData(await filterData(rowData, search));
+      setSearchData(await filterCompanyData(rowData, search));
     })();
   }, [search]);
+
+  useEffect(() => {
+    (async () => {
+      setSearchData(await filterIndustryData(rowData, industrySelection));
+    })();
+  }, [industrySelection]);
 
   if (tableLoading) {
     return <p>Loading...</p>; // wrong place?, use spinner
@@ -59,6 +65,7 @@ export default function StockTable({ data }) {
       <div className="container">
         <h1>Search</h1>
         <SearchBar onChange={setSearch} />
+        <IndustryDropDown onChange={setIndustrySelection} />
       </div>
       <div className="container">
         <div
