@@ -3,6 +3,8 @@ import { Button, badge, Badge } from "reactstrap";
 
 import IndustryTable from "../components/IndustryTable";
 import useAPI from "../components/API";
+import ErrorAlert from "../components/ErrorAlert";
+import "../customcss.css";
 
 export default function PriceHistory() {
   const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
@@ -14,7 +16,7 @@ export default function PriceHistory() {
   }
 
   if (error !== null) {
-    return (alert = `${error}`); // this may be wrong, dont use alert
+    return <ErrorAlert data={error} />;
   }
 
   return (
@@ -32,7 +34,6 @@ export default function PriceHistory() {
         </Button>
       </div>
       <div className="container"></div>
-      //{" "}
     </div>
   );
 }

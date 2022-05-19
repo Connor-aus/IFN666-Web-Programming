@@ -6,16 +6,16 @@
 // also include a header and an image. You should make wise
 // choices for how to present all the information together.
 
-// Industry dropdown
-// sort columns in Industry
-// date slider
-// another chart?? check Criteria
 // css
-// error handling
-// loading
+// Home Details
 // screen reading
+// loading across all
+
 // report
+// date slider
 // video
+
+import "../customcss.css";
 
 export default function Home() {
   return (

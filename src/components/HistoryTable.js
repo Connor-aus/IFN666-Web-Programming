@@ -58,6 +58,11 @@ export default function HistoryTable({ data }) {
             columnDefs={columns}
             rowData={rowData}
             pagination={true}
+            defaultColDef={{
+              flex: 1,
+              resizable: true,
+              columnHoverHighlight: true,
+            }}
           />
         </div>
       </div>

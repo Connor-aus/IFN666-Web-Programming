@@ -38,3 +38,7 @@ export async function filterIndustryData(rowData, industrySelection) {
     return row.industry.indexOf(industrySelection) > -1;
   });
 }
+
+// var a = [1, 1, 2];
+
+// setIndustries = [... new Set(rowData.industry)]

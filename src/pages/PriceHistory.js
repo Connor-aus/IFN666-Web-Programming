@@ -5,6 +5,9 @@ import HistoryChart from "../components/HistoryChart.js";
 import HistoryTable from "../components/HistoryTable.js";
 import CompanyInfo from "../components/CompanyInfo.js";
 import useAPI from "../components/API";
+import ErrorAlert from "../components/ErrorAlert.js";
+import LoadingSymbol from "../components/LoadingSymbol.js";
+import "../customcss.css";
 
 export default function PriceHistory() {
   const { symbol } = useParams("");
@@ -12,22 +15,35 @@ export default function PriceHistory() {
   const priceHistoryURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=`;
   const { loading, data, error } = useAPI(priceHistoryURL, AA_API_KEY);
 
+  // let errorTest = "[error message]";
+  // if (errorTest !== null) {
+  //   return <ErrorAlert data={errorTest} />;
+  // }
+
+  // let loadingTest = true;
+  // if (loadingTest) {
+  //   return (
+  //     <div className="LoadingSymbol">
+  //       <LoadingSymbol />;
+  //     </div>
+  //   );
+  // }
+
   if (loading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return (
+      <div className="LoadingSymbol">
+        <LoadingSymbol />;
+      </div>
+    );
   }
 
   if (error !== null) {
-    return (alert = `${error}`); // this may be wrong, dont use alert
+    return <ErrorAlert data={error} />;
   }
 
   return (
     <div className="StockHistry">
-      <div className="container">
-        {/* <SearchBar onSubmit={setSearch} /> */}
-        {/* {companyData.map((company) => (
-          <Company {...company} />
-        ))} */}
-      </div>
+      <div className="container"></div>
       <div className="container">
         <CompanyInfo data={symbol} />
       </div>

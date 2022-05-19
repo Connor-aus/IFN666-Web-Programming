@@ -1,41 +1,26 @@
 import "./App.css";
 
-import React, { useState } from "react";
+import React from "react";
 
 import Home from "./pages/Home";
 import Stocks from "./pages/Stocks";
 import PriceHistory from "./pages/PriceHistory";
-import ErrorPage from "./pages/ErrorPage";
+import PageNotFound from "./pages/PageNotFound";
 import Industry from "./pages/Industry";
+import NavLayout from "./components/NavLayout";
+import Footer from "./components/Footer";
+import "./customcss.css";
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  NavLink,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <div>
-          <nav>
-            {/*make navbar into a map function */}
-            <ul>
-              <li>
-                <NavLink to="/">Home</NavLink>
-              </li>
-              <li>
-                <NavLink to="/stocks">Stocks</NavLink>
-              </li>
-              <li>
-                <NavLink to="/industry">Industry</NavLink>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <NavLayout />
+        <Footer />
       </div>
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/stocks" element={<Stocks />} />
@@ -43,7 +28,7 @@ function App() {
           <Route path=":symbol" element={<PriceHistory />} />
         </Route>
         <Route path="/industry" element={<Industry />} />
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
   );

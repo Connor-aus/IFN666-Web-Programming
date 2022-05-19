@@ -52,6 +52,12 @@ export default function IndustryTable({ data }) {
           columnDefs={columnData}
           rowData={rowData}
           pagination={true}
+          defaultColDef={{
+            flex: 1,
+            resizable: true,
+            columnHoverHighlight: true,
+            sortable: true,
+          }}
         />
       </div>
     </div>
@@ -76,7 +82,8 @@ async function getRowData(industryInfo) {
     temp.industry = industryName;
 
     for (let x = 0; x < arrayLength; x++) {
-      temp[`${elementArray[x]}`] = industryInfo[x][`${industryName}`];
+      temp[`${elementArray[x]}`] =
+        industryInfo[x][`${industryName}`] ?? "[empty]";
     }
     rows.push(temp);
   }

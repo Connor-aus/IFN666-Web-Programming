@@ -79,6 +79,11 @@ export default function StockTable({ data }) {
             rowData={searchData}
             pagination={true}
             rowSelection="single"
+            defaultColDef={{
+              flex: 1,
+              resizable: true,
+              columnHoverHighlight: true,
+            }}
             onGridReady={onGridReady}
           />
         </div>

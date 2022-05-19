@@ -2,6 +2,8 @@ import { Button, badge, Badge } from "reactstrap";
 
 import StockTable from "../components/StockTable";
 import useAPI from "../components/API";
+import ErrorAlert from "../components/ErrorAlert";
+import "../customcss.css";
 
 // FMP API https://site.financialmodelingprep.com/developer
 // API key https://site.financialmodelingprep.com/register
@@ -29,11 +31,11 @@ export default function Stocks() {
   }
 
   if (error !== null) {
-    return (alert = `${error}`); // this may be wrong, dont use alert
+    return <ErrorAlert data={error} />;
   }
 
   return (
-    <div className="Stocks">
+    <div className="Stocks" Alt text>
       {loading ? "[Loading table ...]" : <StockTable data={data} />}
       <Button
         color="info"

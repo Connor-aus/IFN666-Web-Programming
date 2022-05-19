@@ -1,31 +1,30 @@
-import { useState, useEffect } from "react";
 import useAPI from "./API";
 
-const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
-const industryInfoURL = `//www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=`;
+export default function CompanyInfo(symbol) {
+  const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
+  const industryInfoURL = `//www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol.data}&apikey=`;
+  const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
 
-// add industry of this company
+  if (loading) {
+    return <p>Loading...</p>; // wrong place?, use spinner
+  }
 
-export default function CompanyInfo() {
-  // const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
-
-  // if (loading) {
-  //   return <p>Loading...</p>; // wrong place?, use spinner
-  // }
-
-  // if (loading2) {
-  //   return <p>Loading...</p>; // wrong place?, use spinner
-  // }
-
-  // if (error !== null) {
-  //   return (alert = `${error}`); // this may be wrong, dont use alert
-  // }
+  if (error !== null) {
+    return (
+      <div className="CompanyInfo">
+        <div className="container">
+          <h3>Description not found ...</h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="CompanyInfo">
       <div className="container">
         <h1>Description</h1>
-        <p>{exampleInfo.Description}</p>
+        <p>Industry: {data.Sector}</p>
+        <p>{data.Description}</p>
       </div>
     </div>
   );

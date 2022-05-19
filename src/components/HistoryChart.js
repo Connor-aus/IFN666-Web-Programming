@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
+import { NonceProvider } from "react-select";
 
 export default function HistoryTable({ data }) {
   const [chartLoading, setChartLoading] = useState(true);
@@ -32,13 +33,46 @@ export default function HistoryTable({ data }) {
     })();
   }, [dataUpdate]);
 
+  const options = {
+    responsive: true,
+    color: "black",
+    borderColor: "black",
+    borderWidth: 1,
+    pointRadius: 0,
+    text: "Stock Performance",
+    scales: {
+      y: {
+        ticks: {
+          callback: function (value, index, ticks) {
+            return "$" + value;
+          },
+        },
+        title: {
+          text: "Stock Price",
+        },
+      },
+      x: {
+        text: "Dates",
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Price History",
+      },
+    },
+  };
+
   if (chartLoading) {
     return <p>Loading...</p>; // wrong place?, use spinner
   }
 
   return (
     <div className="HistoryChart">
-      <Line data={chartData} />
+      <Line data={chartData} options={options} />
     </div>
   );
 }
@@ -56,28 +90,29 @@ async function getChartData(data, labels) {
         label: `Open`,
         data: data.map((stock) => stock["1. open"]).reverse(),
         fill: true,
-        pointRadius: 0,
+        borderColor: "orange",
       },
       {
         type: `line`,
         label: `High`,
         data: data.map((stock) => stock["2. high"]).reverse(),
         fill: true,
-        pointRadius: 0,
+        borderColor: "green",
       },
       {
         type: `line`,
         label: `Low`,
         data: data.map((stock) => stock["3. low"]).reverse(),
         fill: true,
-        pointRadius: 0,
+        borderColor: "red",
+        backgroundColor: "LightCyan",
       },
       {
         type: `line`,
         label: `Close`,
         data: data.map((stock) => stock["4. close"]).reverse(),
         fill: true,
-        pointRadius: 0,
+        borderColor: "blue",
       },
     ],
   };
