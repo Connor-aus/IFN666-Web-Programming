@@ -1,15 +1,21 @@
+import { dateFilter, StartDateSetter, EndDateSetter } from "./DateFilter";
+
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Container, Row, Col } from "reactstrap";
+import { render } from "@testing-library/react";
 
 export default function HistoryTable({ data }) {
   const [chartLoading, setChartLoading] = useState(true);
   const [dataUpdate, setDataUpdate] = useState();
   const [labels, setLabels] = useState();
+  const [rawData, setRawData] = useState();
   const [chartData, setChartData] = useState();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  // check for updated data then set rerender
+  // // check for updated data then set rerender
   setTimeout(() => {
     setDataUpdate(data);
   }, 100);
@@ -23,7 +29,7 @@ export default function HistoryTable({ data }) {
             ...x,
           })
         );
-
+        setRawData(stockhistory);
         setLabels(await getLabels(stockhistory));
         setChartData(await getChartData(stockhistory, labels));
         setChartLoading(false);
@@ -32,6 +38,20 @@ export default function HistoryTable({ data }) {
       }
     })();
   }, [dataUpdate]);
+
+  useEffect(() => {
+    (async () => {
+      if (startDate == "" || endDate == "") return;
+      try {
+        let filteredData = dateFilter(startDate, endDate, rawData);
+        setLabels(await getLabels(filteredData));
+        setChartData(await getChartData(filteredData, labels));
+        render();
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [startDate, endDate]);
 
   const options = {
     responsive: true,
@@ -80,6 +100,14 @@ export default function HistoryTable({ data }) {
 
   return (
     <Container style={{ marginBottom: "80px" }}>
+      <Row className="justify-content-md-center">
+        <Col>
+          <StartDateSetter onChange={setStartDate} />
+        </Col>
+        <Col>
+          <EndDateSetter onChange={setEndDate} />
+        </Col>
+      </Row>
       <div className="HistoryChart">
         <Line data={chartData} options={options} />
       </div>
