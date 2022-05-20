@@ -2,7 +2,7 @@ import useAPI from "./API";
 
 export default function CompanyInfo(symbol) {
   const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
-  const industryInfoURL = `//www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol.data}&apikey=`;
+  const industryInfoURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol.data}&apikey=`;
   const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
 
   if (loading) {

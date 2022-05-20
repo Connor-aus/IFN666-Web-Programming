@@ -6,7 +6,7 @@ import { Badge } from "reactstrap";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import { IndustryDropDown, filterIndustryData } from "./IndustryDropDown";
+import { IndustryDropDown } from "./IndustryDropDown";
 import { SearchBar, filterCompanyData } from "./../components/SearchBar";
 import "../customcss.css";
 
@@ -35,8 +35,8 @@ export default function StockTable({ data }) {
     (async () => {
       try {
         let rows = await getRowData(data);
-        setRowData(rows); // error checking ??
-        setSearchData(rows); // error checking ??
+        setRowData(rows);
+        setSearchData(rows);
         setColumnData(await getColumnData(data));
         setTableLoading(false);
       } catch {
@@ -47,18 +47,14 @@ export default function StockTable({ data }) {
 
   useEffect(() => {
     (async () => {
-      setSearchData(await filterCompanyData(rowData, search));
+      setSearchData(
+        await filterCompanyData(rowData, search, industrySelection)
+      );
     })();
-  }, [search]);
-
-  useEffect(() => {
-    (async () => {
-      setSearchData(await filterIndustryData(rowData, industrySelection));
-    })();
-  }, [industrySelection]);
+  }, [search, industrySelection]);
 
   if (tableLoading) {
-    return <p>Loading ...</p>; // wrong place?, use spinner
+    return <p>Loading ...</p>;
   }
 
   return (
@@ -73,7 +69,7 @@ export default function StockTable({ data }) {
             <SearchBar onChange={setSearch} />
           </Col>
           <Col className="justify-content-md-right">
-            <h3>Filter</h3>
+            <h3>Industry Filter</h3>
             <IndustryDropDown onChange={setIndustrySelection} />
           </Col>
         </Row>

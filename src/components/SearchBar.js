@@ -16,24 +16,23 @@ export function SearchBar(props) {
           props.onChange(e.target.value);
         }}
       />
-      {/* <button
-        id="search=button"
-        type="button"
-        onClick={() => props.onSubmit(innerSearch)}
-      >
-        Search
-      </button> */}
     </div>
   );
 }
 
-// add both cases
-export async function filterCompanyData(rowData, search) {
-  return rowData.filter(
+export async function filterCompanyData(rowData, search, industrySelection) {
+  let filteredData = rowData.filter(
     (row) =>
       row.symbol.toLowerCase().indexOf(search) > -1 ||
       row.name.toLowerCase().indexOf(search) > -1 ||
       row.symbol.toUpperCase().indexOf(search) > -1 ||
       row.name.toUpperCase().indexOf(search) > -1
   );
+
+  if (industrySelection != "All") {
+    return filteredData.filter(
+      (row) => row.industry.indexOf(industrySelection) > -1
+    );
+  }
+  return filteredData;
 }

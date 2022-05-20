@@ -30,7 +30,7 @@ export default function HistoryTable({ data }) {
             ...x,
           })
         );
-        setRowData(await getRowData(stockhistory)); // error checking ??
+        setRowData(await getRowData(stockhistory));
         setTableLoading(false);
       } catch {
         console.log(`History Table still being constructed`);
@@ -39,7 +39,7 @@ export default function HistoryTable({ data }) {
   }, [dataUpdate]);
 
   if (tableLoading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return <p>Loading...</p>;
   }
 
   return (

@@ -7,7 +7,7 @@ export default function ErrorAlert(error) {
   if (show) {
     return (
       <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-        <Alert.Heading>Something went wront</Alert.Heading>
+        <Alert.Heading>Something went wrong</Alert.Heading>
         <br />
         <p>Error: {error.data}</p>
         <p>Please try refresh or navigate to another page.</p>
