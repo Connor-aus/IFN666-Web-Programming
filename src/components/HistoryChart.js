@@ -67,7 +67,15 @@ export default function HistoryTable({ data }) {
   };
 
   if (chartLoading) {
-    return <p>Loading...</p>;
+    return (
+      <Container>
+        <Row className="justify-content-md-center">
+          <Col sm="auto" id="skinny">
+            <p>Loading Chart...</p>
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 
   return (

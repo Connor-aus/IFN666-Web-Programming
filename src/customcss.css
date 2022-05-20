@@ -46,3 +46,7 @@ body {
   flex-wrap: wrap;
 }
 
+#skinny {
+  width: 30%;
+  min-width: fit-content;
+}

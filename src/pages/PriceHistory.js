@@ -28,7 +28,7 @@ export default function PriceHistory() {
     return (
       <ErrorAlert
         data={
-          "You must select a componay from the Stocks page to view its Price History!"
+          "You must select a company from the Stocks page to view its Price History!"
         }
       />
     );

@@ -35,7 +35,15 @@ export default function IndustryTable({ data }) {
   }, [dataUpdate]);
 
   if (tableLoading) {
-    return <p>Loading...</p>;
+    return (
+      <Container>
+        <Row className="justify-content-md-center">
+          <Col sm="auto" id="skinny">
+            <p>Loading Table...</p>
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 
   return (

@@ -1,13 +1,36 @@
 import useAPI from "./API";
 import ErrorAlert from "./ErrorAlert";
 
+import { Container, Row, Col } from "react-bootstrap";
+
 export default function CompanyInfo(symbol) {
   const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
   const industryInfoURL = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol.data}&apikey=`;
   const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
 
+  // let loadingTest = true;
+  // if (loadingTest) {
+  //   return (
+  //     <Container>
+  //       <Row className="justify-content-md-center">
+  //         <Col sm="auto" id="skinny">
+  //           <p>Loading Company Info...</p>
+  //         </Col>
+  //       </Row>
+  //     </Container>
+  //   );
+  // }
+
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <Container>
+        <Row className="justify-content-md-center">
+          <Col sm="auto" id="skinny">
+            <p>Loading Company Info...</p>
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 
   if (error !== null) {
