@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
-import { Container } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 export default function HistoryTable({ data }) {
   const [chartLoading, setChartLoading] = useState(true);

@@ -1,7 +1,3 @@
-// report
-// date slider
-// video
-
 import "../customcss.css";
 
 import { Container, Row, Col, Button } from "react-bootstrap";

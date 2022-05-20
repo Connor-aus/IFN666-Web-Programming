@@ -3,6 +3,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from "react";
+import { Container, Col, Row } from "react-bootstrap";
 
 export default function HistoryTable({ data }) {
   const [stockInfo, setStockInfo] = useState([]);
