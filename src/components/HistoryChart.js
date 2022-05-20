@@ -67,7 +67,7 @@ export default function HistoryTable({ data }) {
   };
 
   if (chartLoading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return <p>Loading...</p>;
   }
 
   return (

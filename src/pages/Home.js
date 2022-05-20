@@ -16,13 +16,13 @@ export default function Home() {
         <Row>
           <p>
             Stockings is a website for users who wish to analyse the stock
-            markets Nasdaq-100.
+            markets Nasdaq-100 and there respected industries.
           </p>
         </Row>
         <Row id="marginBottom">
           <p>
             You are on the landing page. From here you can select any of the
-            links for the navbar.
+            links from the navbar or select the 'Start Here!' button below.
           </p>
         </Row>
         <Row id="flexWrap">

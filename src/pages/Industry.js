@@ -21,7 +21,7 @@ export default function Industry() {
   }
 
   if (error !== null) {
-    return <ErrorAlert data={error} />;
+    return <ErrorAlert data={"API failed to retrieve data"} />;
   }
 
   return (

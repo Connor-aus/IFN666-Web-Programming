@@ -15,11 +15,6 @@ export default function PriceHistory() {
   const priceHistoryURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=`;
   const { loading, data, error } = useAPI(priceHistoryURL, AA_API_KEY);
 
-  // let errorTest = "[error message]";
-  // if (errorTest !== null) {
-  //   return <ErrorAlert data={errorTest} />;
-  // }
-
   // let loadingTest = true;
   // if (loadingTest) {
   //   return (
@@ -48,7 +43,7 @@ export default function PriceHistory() {
   }
 
   if (error !== null) {
-    return <ErrorAlert data={error} />;
+    return <ErrorAlert data={"API failed to retrieve data"} />;
   }
 
   return (

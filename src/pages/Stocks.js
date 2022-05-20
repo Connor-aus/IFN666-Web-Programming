@@ -20,7 +20,8 @@ export default function Stocks() {
   }
 
   if (error !== null) {
-    return <ErrorAlert data={error} />;
+    console.log(error);
+    return <ErrorAlert data={"API failed to retrieve data"} />;
   }
 
   return (

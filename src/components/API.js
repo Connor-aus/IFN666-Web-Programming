@@ -15,7 +15,7 @@ async function getData(endPoint, API_KEY, ...props) {
 
 export default function useAPI(endPoint, API_KEY, ...props) {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -33,6 +33,6 @@ export default function useAPI(endPoint, API_KEY, ...props) {
   return {
     loading,
     data,
-    error: null,
+    error,
   };
 }

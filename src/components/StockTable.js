@@ -137,7 +137,6 @@ function symbolFinder(params, data) {
 }
 
 async function getRowData(stocks) {
-  // if (stocks == []) return []; // error checking??
   return stocks.map((stock) => {
     return {
       symbol: stock.symbol,

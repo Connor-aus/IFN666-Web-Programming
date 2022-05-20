@@ -80,7 +80,6 @@ const columns = [
 ];
 
 async function getRowData(stockhistory) {
-  // if (stocks == []) return []; // error checking??
   return stockhistory.map((stock) => {
     return {
       date: stock.date,

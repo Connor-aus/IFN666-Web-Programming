@@ -26,7 +26,7 @@ export default function IndustryTable({ data }) {
 
         industryInfo.shift();
         setColumnData(await getColumnData(industryInfo));
-        setRowData(await getRowData(industryInfo)); // error checking ??
+        setRowData(await getRowData(industryInfo));
         setTableLoading(false);
       } catch {
         console.log(`Industry data still being fetched `);
@@ -35,7 +35,7 @@ export default function IndustryTable({ data }) {
   }, [dataUpdate]);
 
   if (tableLoading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return <p>Loading...</p>;
   }
 
   return (
@@ -78,7 +78,6 @@ export default function IndustryTable({ data }) {
 }
 
 async function getRowData(industryInfo) {
-  // if (stocks == []) return []; // error checking??
   let rows = [];
   let temp = {};
   let elementArray = [];
@@ -104,7 +103,6 @@ async function getRowData(industryInfo) {
 }
 
 async function getColumnData(industryInfo) {
-  // if (stocks == []) return []; // error checking??
   let columns = [{ headerName: `Industry`, field: `industry` }];
 
   industryInfo.forEach((element) => {

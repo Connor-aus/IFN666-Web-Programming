@@ -1,4 +1,5 @@
 import useAPI from "./API";
+import ErrorAlert from "./ErrorAlert";
 
 export default function CompanyInfo(symbol) {
   const AA_API_KEY = `NHGS3IDIQ0OIJCEX`;
@@ -6,17 +7,11 @@ export default function CompanyInfo(symbol) {
   const { loading, data, error } = useAPI(industryInfoURL, AA_API_KEY);
 
   if (loading) {
-    return <p>Loading...</p>; // wrong place?, use spinner
+    return <p>Loading...</p>;
   }
 
   if (error !== null) {
-    return (
-      <div className="CompanyInfo">
-        <div className="container">
-          <h3>Description not found ...</h3>
-        </div>
-      </div>
-    );
+    return <ErrorAlert data={"API failed to retrieve data"} />;
   }
 
   return (
