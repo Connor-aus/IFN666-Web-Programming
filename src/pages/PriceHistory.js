@@ -15,15 +15,6 @@ export default function PriceHistory() {
   const priceHistoryURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=`;
   const { loading, data, error } = useAPI(priceHistoryURL, AA_API_KEY);
 
-  // let loadingTest = true;
-  // if (loadingTest) {
-  //   return (
-  //     <div className="LoadingSymbol">
-  //       <LoadingSymbol />;
-  //     </div>
-  //   );
-  // }
-
   if (symbol == "") {
     return (
       <ErrorAlert
